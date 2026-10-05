@@ -41,8 +41,10 @@ struct ResultsView: View {
                 VStack(spacing: 6) {
                     Text("🎁 Chest opened!")
                         .font(.headline)
-                    Text(def.emoji)
-                        .font(.system(size: 64))
+                    def.art
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 96, height: 96)
                     Text(def.name)
                         .bold()
                     Text(chest.isNew

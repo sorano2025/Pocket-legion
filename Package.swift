@@ -10,7 +10,8 @@ let package = Package(
     targets: [
         .executableTarget(
             name: "PocketLegion",
-            path: "Sources"
+            path: "Sources",
+            resources: [.process("Resources")]
         )
     ]
 )

@@ -16,8 +16,10 @@ struct UnitCardView: View {
 
     var body: some View {
         VStack(spacing: 3) {
-            Text(def.emoji)
-                .font(.largeTitle)
+            def.art
+                .resizable()
+                .scaledToFit()
+                .frame(width: 56, height: 56)
             Text(def.name)
                 .font(.caption)
                 .bold()

@@ -78,5 +78,7 @@ pocket-legion/
     ├── DraftView.swift          ← squad drafting + formation
     ├── ResultsView.swift        ← win/lose, chest reveal
     ├── CollectionView.swift     ← unit upgrades
-    └── UnitCardView.swift       ← shared unit card UI
+    ├── UnitCardView.swift       ← shared unit card UI
+    ├── UnitArt.swift            ← sprite loading (SwiftUI + SpriteKit)
+    └── Resources/               ← ★ 10 unit sprites (<unitId>.png)
 ```

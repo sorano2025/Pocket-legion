@@ -64,7 +64,15 @@ struct HomeView: View {
                     .foregroundColor(.secondary)
                 HStack(spacing: 2) {
                     ForEach(squad.slots, id: \.self) { slot in
-                        Text(unitById[slot.unitId]?.emoji ?? "?")
+                        if let def = unitById[slot.unitId] {
+                            def.art
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 28, height: 28)
+                        } else {
+                            Text("?")
+                                .font(.title3)
+                        }
                     }
                 }
                 .font(.title3)

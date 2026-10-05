@@ -27,7 +27,8 @@ final class BattleUnit {
     var alive = true
 
     let container = SKNode()
-    let body: SKShapeNode
+    let sprite: SKSpriteNode
+    let ring: SKShapeNode
     let hpBG: SKShapeNode
     let hpFG: SKShapeNode
 
@@ -41,19 +42,25 @@ final class BattleUnit {
         self.baseInterval = def.attackSpeed > 0 ? 1.0 / def.attackSpeed : 999.0
         self.cooldown = Double.random(in: 0...0.4)
 
-        let color: SKColor = team == .player
+        let teamColor: SKColor = team == .player
             ? SKColor(red: 0.25, green: 0.55, blue: 1.0, alpha: 1.0)
             : SKColor(red: 1.0, green: 0.32, blue: 0.32, alpha: 1.0)
 
-        body = SKShapeNode(circleOfRadius: 22)
-        body.fillColor = color
-        body.strokeColor = .white
-        body.lineWidth = 2
+        // Team ring under the sprite — keeps sides readable at a glance.
+        ring = SKShapeNode(circleOfRadius: 30)
+        ring.strokeColor = teamColor
+        ring.lineWidth = 3
+        ring.fillColor = SKColor(white: 0, alpha: 0.25)
+        ring.position = CGPoint(x: 0, y: -4)
 
-        let label = SKLabelNode(text: def.emoji)
-        label.fontSize = 24
-        label.verticalAlignmentMode = .center
-        label.position = CGPoint(x: 0, y: 1)
+        if let tex = spriteTexture(for: def) {
+            sprite = SKSpriteNode(texture: tex)
+        } else {
+            // Fallback: plain team-colored disc if art is missing.
+            sprite = SKSpriteNode(color: teamColor,
+                                  size: CGSize(width: 44, height: 44))
+        }
+        sprite.size = CGSize(width: 62, height: 62)
 
         hpBG = SKShapeNode(rectOf: CGSize(width: 40, height: 6), cornerRadius: 3)
         hpBG.fillColor = SKColor(white: 0, alpha: 0.55)
@@ -65,8 +72,8 @@ final class BattleUnit {
         hpFG.strokeColor = .clear
         hpFG.position = CGPoint(x: 0, y: 32)
 
-        container.addChild(body)
-        container.addChild(label)
+        container.addChild(ring)
+        container.addChild(sprite)
         container.addChild(hpBG)
         container.addChild(hpFG)
         container.position = position
@@ -329,11 +336,12 @@ final class BattleScene: SKScene {
     }
 
     private func flash(_ u: BattleUnit) {
-        let orig = u.body.fillColor
-        u.body.fillColor = .white
-        u.body.run(SKAction.sequence([
+        // White hit-flash on the sprite (colorize pulse).
+        u.sprite.run(SKAction.sequence([
+            SKAction.colorize(with: .white, colorBlendFactor: 0.85,
+                              duration: 0.05),
             SKAction.wait(forDuration: 0.07),
-            SKAction.run { u.body.fillColor = orig },
+            SKAction.colorize(withColorBlendFactor: 0.0, duration: 0.08),
         ]))
     }
 

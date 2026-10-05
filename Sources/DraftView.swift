@@ -32,8 +32,15 @@ struct DraftView: View {
                     .font(.headline)
                 HStack(spacing: 4) {
                     ForEach(squad.slots, id: \.self) { slot in
-                        Text(unitById[slot.unitId]?.emoji ?? "?")
-                            .font(.title3)
+                        if let def = unitById[slot.unitId] {
+                            def.art
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 28, height: 28)
+                        } else {
+                            Text("?")
+                                .font(.title3)
+                        }
                     }
                 }
             }
@@ -56,8 +63,10 @@ struct DraftView: View {
                             )
                         if let placed = placements[cell],
                            let def = unitById[placed.unitId] {
-                            Text(def.emoji)
-                                .font(.largeTitle)
+                            def.art
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 56, height: 56)
                         } else {
                             Text("＋")
                                 .font(.title)
