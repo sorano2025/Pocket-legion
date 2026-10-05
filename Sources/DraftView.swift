@@ -130,10 +130,12 @@ struct DraftView: View {
     private func tapCell(_ cell: Int) {
         if placements[cell] != nil {
             placements[cell] = nil
+            SoundManager.shared.play(.tap, volume: 0.5)
             return
         }
         guard let sel = selectedId,
               !placements.values.contains(where: { $0.unitId == sel }) else { return }
+        SoundManager.shared.play(.tap, volume: 0.5)
         placements[cell] = PlacedUnit(
             unitId: sel,
             level: game.ownedLevel(of: sel) ?? 1,

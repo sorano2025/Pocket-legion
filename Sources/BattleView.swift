@@ -63,9 +63,13 @@ struct BattleView: View {
             }
         }
         .navigationBarBackButtonHidden(true)
+        .onAppear {
+            SoundManager.shared.startMusic()
+        }
         .onChange(of: controller.battleOver) { _, newValue in
             guard newValue, !finished else { return }
             finished = true
+            SoundManager.shared.play(controller.playerWon ? .win : .lose)
             let outcome = game.applyBattleResult(won: controller.playerWon)
             game.navPath.append(.results(outcome))
         }

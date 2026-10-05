@@ -257,6 +257,8 @@ final class BattleScene: SKScene {
                 let amount = u.def.heal(at: u.level)
                 target.hp = min(target.maxHP, target.hp + amount)
                 target.refreshBar()
+                SoundManager.shared.play(.heal, volume: 0.7)
+                maybeVoice(for: u)
                 floatText(at: tpos, text: "+\(Int(amount))", color: .green)
                 let ring = SKShapeNode(circleOfRadius: 26)
                 ring.strokeColor = .green
@@ -280,9 +282,22 @@ final class BattleScene: SKScene {
 
     // MARK: - Combat
 
+    private var lastVoiceAt: Double = 0
+
+    /// Occasional battle bark — throttled so units don't talk over each other.
+    private func maybeVoice(for u: BattleUnit) {
+        let now = Date().timeIntervalSince1970
+        guard now - lastVoiceAt > 3.0 else { return }
+        guard Double.random(in: 0...1) < 0.35 else { return }
+        lastVoiceAt = now
+        SoundManager.shared.playVoice(for: u.def.id)
+    }
+
     private func strike(attacker: BattleUnit, target: BattleUnit) {
         let isRanged = attacker.def.range > 60
+        maybeVoice(for: attacker)
         if isRanged {
+            SoundManager.shared.play(.shoot, volume: 0.7)
             let proj = SKShapeNode(circleOfRadius: 5)
             proj.fillColor = attacker.team == .player ? .cyan : .orange
             proj.strokeColor = .clear
@@ -322,6 +337,7 @@ final class BattleScene: SKScene {
     private func dealDamage(to target: BattleUnit, amount: Double) {
         guard target.alive else { return }
         target.hp -= amount
+        SoundManager.shared.play(.hit, volume: 0.8)
         flash(target)
         floatText(at: target.container.position, text: "-\(Int(amount))", color: .white)
         if target.hp <= 0 {
@@ -367,6 +383,7 @@ final class BattleScene: SKScene {
     func triggerRally() {
         guard !abilityUsed, !battleEnded else { return }
         abilityUsed = true
+        SoundManager.shared.play(.rally)
         for u in units where u.alive && u.team == .player {
             u.hp = min(u.maxHP, u.hp + u.maxHP * 0.30)
             u.buffTimer = 8.0

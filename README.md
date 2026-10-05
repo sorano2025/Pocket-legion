@@ -80,5 +80,8 @@ pocket-legion/
     ├── CollectionView.swift     ← unit upgrades
     ├── UnitCardView.swift       ← shared unit card UI
     ├── UnitArt.swift            ← sprite loading (SwiftUI + SpriteKit)
+    ├── SoundManager.swift       ← SFX + music playback
+    ├── MusicBox.swift           ← generative background music loop
     └── Resources/               ← ★ 10 unit sprites (<unitId>.png)
+        └── Audio/               ← 8 sound effects (hit, shoot, heal…)
 ```

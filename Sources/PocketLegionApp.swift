@@ -87,7 +87,10 @@ struct HomeView: View {
             .cornerRadius(14)
             .padding(.horizontal)
 
-            Button(action: { game.navPath.append(.draft) }) {
+            Button(action: {
+                SoundManager.shared.play(.tap, volume: 0.6)
+                game.navPath.append(.draft)
+            }) {
                 Text("⚔️  BATTLE")
                     .font(.title2)
                     .bold()

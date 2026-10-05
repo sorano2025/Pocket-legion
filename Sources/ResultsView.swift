@@ -53,6 +53,9 @@ struct ResultsView: View {
                         .font(.subheadline)
                         .foregroundColor(chest.isNew ? .green : .orange)
                 }
+                .onAppear {
+                    SoundManager.shared.play(.chest)
+                }
                 .padding()
                 .frame(maxWidth: .infinity)
                 .background(Color(.secondarySystemBackground))
